@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Browse books — {{ site_name }}{% endblock %}
+{% block content %}
+<h1>Browse books</h1>
+<div class="layout">
+  <aside class="filters">
+    <form method="get">
+      <label>Search <input type="search" name="q" value="{{ args.get('q','') }}"></label>
+      <label>Category
+        <select name="category">
+          <option value="">All</option>
+          {% for c in categories %}<option value="{{ c.slug }}" {{ 'selected' if args.get('category') == c.slug }}>{{ c.name }}</option>{% endfor %}
+        </select>
+      </label>
+      <label>Author
+        <select name="author">
+          <option value="">All</option>
+          {% for a in authors %}<option value="{{ a.slug }}" {{ 'selected' if args.get('author') == a.slug }}>{{ a.display_name }}</option>{% endfor %}
+        </select>
+      </label>
+      <div class="row">
+        <label>Min price <input type="number" step="0.01" min="0" name="min_price" value="{{ args.get('min_price','') }}"></label>
+        <label>Max price <input type="number" step="0.01" min="0" name="max_price" value="{{ args.get('max_price','') }}"></label>
+      </div>
+      <label>Sort
+        <select name="sort">
+          {% for v, l in [('newest','Newest'),('price_asc','Price: low to high'),('price_desc','Price: high to low'),('title','Title A–Z')] %}
+          <option value="{{ v }}" {{ 'selected' if args.get('sort','newest') == v }}>{{ l }}</option>{% endfor %}
+        </select>
+      </label>
+      <button class="btn" type="submit">Apply</button>
+      <a class="muted" href="{{ url_for('public.catalog') }}">Reset</a>
+    </form>
+  </aside>
+  <section>
+    {% if pagination.items %}
+      <div class="grid">{% for book in pagination.items %}{% include "_book_card.html" %}{% endfor %}</div>
+      <div class="pager">
+        {% if pagination.has_prev %}<a href="{{ url_for('public.catalog', page=pagination.prev_num, **query_args) }}">← Previous</a>{% endif %}
+        <span>Page {{ pagination.page }} of {{ pagination.pages }}</span>
+        {% if pagination.has_next %}<a href="{{ url_for('public.catalog', page=pagination.next_num, **query_args) }}">Next →</a>{% endif %}
+      </div>
+    {% else %}
+      <p class="muted">No books match your search.</p>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}

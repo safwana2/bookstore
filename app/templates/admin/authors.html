@@ -1,0 +1,16 @@
+{% extends "admin/admin_base.html" %}
+{% block admin_content %}
+<h1>Authors</h1>
+<form method="post" class="wide-form">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <div class="row">
+    <label>Display name <input type="text" name="display_name" required></label>
+    <label>Royalty % (share the author keeps) <input type="number" name="royalty_rate" min="0" max="100" value="100"></label>
+  </div>
+  <label>Bio <textarea name="bio" rows="3"></textarea></label>
+  <button class="btn" type="submit">Add author</button>
+</form>
+<table><thead><tr><th>Name</th><th>Royalty</th><th>Books</th></tr></thead><tbody>
+{% for a in authors %}<tr><td>{{ a.display_name }}</td><td>{{ a.royalty_rate }}%</td><td>{{ a.books.count() }}</td></tr>{% endfor %}
+</tbody></table>
+{% endblock %}

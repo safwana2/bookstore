@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero">
+  <h1>Books you can read today.</h1>
+  <p>Instant digital downloads. Pay securely, read anywhere.</p>
+  <a class="btn" href="{{ url_for('public.catalog') }}">Browse all books</a>
+</section>
+
+{% if featured %}
+<h2>Featured</h2>
+<div class="grid">{% for book in featured %}{% include "_book_card.html" %}{% endfor %}</div>
+{% endif %}
+
+<h2>New releases</h2>
+{% if latest %}
+<div class="grid">{% for book in latest %}{% include "_book_card.html" %}{% endfor %}</div>
+{% else %}
+<p class="muted">No books published yet. {% if current_user.is_authenticated and current_user.is_admin %}<a href="{{ url_for('admin.book_new') }}">Add your first book.</a>{% endif %}</p>
+{% endif %}
+{% endblock %}

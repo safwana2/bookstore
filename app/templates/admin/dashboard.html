@@ -1,0 +1,25 @@
+{% extends "admin/admin_base.html" %}
+{% block title %}Admin — {{ site_name }}{% endblock %}
+{% block admin_content %}
+<h1>Dashboard</h1>
+<div class="stats">
+  <div class="stat"><span>Revenue</span><strong>{{ stats.revenue|money(currency) }}</strong></div>
+  <div class="stat"><span>Paid orders</span><strong>{{ stats.orders }}</strong></div>
+  <div class="stat"><span>Customers</span><strong>{{ stats.customers }}</strong></div>
+  <div class="stat"><span>Books (published)</span><strong>{{ stats.books }} ({{ stats.published }})</strong></div>
+</div>
+<div class="two-col">
+  <section><h2>Recent orders</h2>
+    <table><thead><tr><th>Order</th><th>Customer</th><th>Total</th><th>Status</th></tr></thead><tbody>
+    {% for o in recent %}<tr><td>{{ o.reference }}</td><td>{{ o.user.email }}</td><td>{{ o.total_display }}</td><td><span class="pill pill-{{ o.status }}">{{ o.status }}</span></td></tr>
+    {% else %}<tr><td colspan="4" class="muted">No orders yet.</td></tr>{% endfor %}
+    </tbody></table>
+  </section>
+  <section><h2>Top sellers</h2>
+    <table><thead><tr><th>Book</th><th>Sales</th></tr></thead><tbody>
+    {% for title, sales in top %}<tr><td>{{ title }}</td><td>{{ sales }}</td></tr>
+    {% else %}<tr><td colspan="2" class="muted">No sales yet.</td></tr>{% endfor %}
+    </tbody></table>
+  </section>
+</div>
+{% endblock %}

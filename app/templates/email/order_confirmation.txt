@@ -1,0 +1,12 @@
+Hi {{ order.user.name or 'there' }},
+
+Thank you for your purchase! Your order {{ order.reference }} has been confirmed.
+
+{% for item in order.items %}- {{ item.title_snapshot }}
+{% endfor %}
+Total paid: {{ order.total_display }}
+
+You can download your books any time from your library:
+{{ url_for('account.library', _external=True) }}
+
+— {{ config.SITE_NAME }}

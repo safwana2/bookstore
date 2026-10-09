@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Purchase history — {{ site_name }}{% endblock %}
+{% block content %}
+<h1>Purchase history</h1>
+{% if orders %}
+<table>
+  <thead><tr><th>Order</th><th>Date</th><th>Items</th><th>Total</th><th>Status</th></tr></thead>
+  <tbody>
+  {% for o in orders %}
+    <tr><td>{{ o.reference }}</td><td>{{ o.created_at.strftime('%Y-%m-%d') }}</td>
+        <td>{{ o.items|map(attribute='title_snapshot')|join(', ') }}</td>
+        <td>{{ o.total_display }}</td><td><span class="pill pill-{{ o.status }}">{{ o.status }}</span></td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% else %}<p class="muted">No orders yet.</p>{% endif %}
+{% endblock %}

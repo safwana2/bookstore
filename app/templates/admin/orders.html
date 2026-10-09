@@ -1,0 +1,15 @@
+{% extends "admin/admin_base.html" %}
+{% block admin_content %}
+<h1>Orders</h1>
+<table><thead><tr><th>Order</th><th>Date</th><th>Customer</th><th>Items</th><th>Total</th><th>Status</th><th></th></tr></thead><tbody>
+{% for o in orders %}
+<tr><td>{{ o.reference }}</td><td>{{ o.created_at.strftime('%Y-%m-%d %H:%M') }}</td><td>{{ o.user.email }}</td>
+  <td>{{ o.items|map(attribute='title_snapshot')|join(', ') }}</td><td>{{ o.total_display }}</td>
+  <td><span class="pill pill-{{ o.status }}">{{ o.status }}</span></td>
+  <td>{% if o.status == 'paid' %}
+    <form method="post" action="{{ url_for('admin.order_refund', order_id=o.id) }}" class="inline" onsubmit="return confirm('Mark as refunded and revoke access?')">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="link" type="submit">Refund</button></form>
+    {% endif %}</td></tr>
+{% else %}<tr><td colspan="7" class="muted">No orders yet.</td></tr>{% endfor %}
+</tbody></table>
+{% endblock %}

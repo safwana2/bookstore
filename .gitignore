@@ -1,0 +1,9 @@
+.venv/
+__pycache__/
+*.pyc
+.env
+instance/
+private_storage/books/*
+private_storage/previews/*
+app/static/uploads/covers/*
+!.gitkeep

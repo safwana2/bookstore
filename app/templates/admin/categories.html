@@ -1,0 +1,10 @@
+{% extends "admin/admin_base.html" %}
+{% block admin_content %}
+<h1>Categories</h1>
+<form method="post" class="inline-form">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <input type="text" name="name" placeholder="New category name" required>
+  <button class="btn" type="submit">Add</button>
+</form>
+<ul class="plain">{% for c in categories %}<li>{{ c.name }} <span class="muted">({{ c.books|length }})</span></li>{% endfor %}</ul>
+{% endblock %}

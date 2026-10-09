@@ -1,0 +1,39 @@
+{% extends "admin/admin_base.html" %}
+{% block admin_content %}
+<h1>{{ 'Edit book' if book.id else 'Add book' }}</h1>
+{% if not authors %}<p class="flash flash-warning">Create an author first under <a href="{{ url_for('admin.authors') }}">Authors</a>.</p>{% endif %}
+<form method="post" enctype="multipart/form-data" class="wide-form">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <label>Title <input type="text" name="title" value="{{ request.form.get('title', book.title or '') }}" required maxlength="255"></label>
+  <label>Author
+    <select name="author_id" required>
+      {% for a in authors %}<option value="{{ a.id }}" {{ 'selected' if (request.form.get('author_id', book.author_id)|string) == a.id|string }}>{{ a.display_name }}</option>{% endfor %}
+    </select>
+  </label>
+  <label>Description <textarea name="description" rows="6">{{ request.form.get('description', book.description or '') }}</textarea></label>
+  <div class="row">
+    <label>Price ({{ config.DEFAULT_CURRENCY }}) <input type="number" step="0.01" min="0" name="price" value="{{ request.form.get('price', book.price_input if book.id else '0.00') }}"></label>
+    <label>Status
+      <select name="status">
+        {% for s in ['draft','in_review','published','archived'] %}<option value="{{ s }}" {{ 'selected' if (request.form.get('status', book.status or 'draft')) == s }}>{{ s }}</option>{% endfor %}
+      </select>
+    </label>
+  </div>
+  <fieldset><legend>Categories</legend>
+    {% for c in categories %}
+      <label class="check"><input type="checkbox" name="categories" value="{{ c.id }}" {{ 'checked' if c in book.categories }}> {{ c.name }}</label>
+    {% else %}<span class="muted">No categories yet — add some under Categories.</span>{% endfor %}
+  </fieldset>
+  <label class="check"><input type="checkbox" name="is_featured" {{ 'checked' if book.is_featured }}> Featured on home page</label>
+
+  <label>Cover image (png/jpg/webp) {% if book.cover_filename %}<span class="muted">— uploaded, choose a file to replace</span>{% endif %}
+    <input type="file" name="cover" accept=".png,.jpg,.jpeg,.webp"></label>
+  <label>Book file (pdf/epub) — private, only buyers can download {% if book.file_filename %}<span class="muted">— uploaded, choose a file to replace</span>{% endif %}
+    <input type="file" name="book_file" accept=".pdf,.epub"></label>
+  <label>Preview PDF (a few sample pages) {% if book.preview_filename %}<span class="muted">— uploaded, choose a file to replace</span>{% endif %}
+    <input type="file" name="preview_file" accept=".pdf"></label>
+
+  <button class="btn" type="submit">Save</button>
+  <a href="{{ url_for('admin.books') }}">Cancel</a>
+</form>
+{% endblock %}

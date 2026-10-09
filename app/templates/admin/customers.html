@@ -1,0 +1,11 @@
+{% extends "admin/admin_base.html" %}
+{% block admin_content %}
+<h1>Customers</h1>
+<table><thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Joined</th><th>Active</th><th></th></tr></thead><tbody>
+{% for u in users %}
+<tr><td>{{ u.name }}</td><td>{{ u.email }}</td><td>{{ u.role }}</td><td>{{ u.created_at.strftime('%Y-%m-%d') }}</td><td>{{ 'Yes' if u.active else 'No' }}</td>
+  <td><form method="post" action="{{ url_for('admin.customer_toggle', user_id=u.id) }}" class="inline">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="link" type="submit">{{ 'Deactivate' if u.active else 'Reactivate' }}</button></form></td></tr>
+{% endfor %}
+</tbody></table>
+{% endblock %}

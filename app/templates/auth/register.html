@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Sign up — {{ site_name }}{% endblock %}
+{% block content %}
+<div class="form-box">
+  <h1>Create your account</h1>
+  <form method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <label>Full name <input type="text" name="name" required maxlength="120"></label>
+    <label>Email <input type="email" name="email" required></label>
+    <label>Password (8+ characters) <input type="password" name="password" required minlength="8"></label>
+    <button class="btn" type="submit">Sign up</button>
+  </form>
+  <p class="muted">Already registered? <a href="{{ url_for('auth.login') }}">Log in</a></p>
+</div>
+{% endblock %}

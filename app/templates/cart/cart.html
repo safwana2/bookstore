@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Your cart — {{ site_name }}{% endblock %}
+{% block content %}
+<h1>Your cart</h1>
+{% if books %}
+<table>
+  <thead><tr><th>Book</th><th>Price</th><th></th></tr></thead>
+  <tbody>
+  {% for b in books %}
+    <tr><td><a href="{{ url_for('public.book_detail', slug=b.slug) }}">{{ b.title }}</a><br><span class="muted">{{ b.author.display_name }}</span></td>
+        <td>{{ b.price_display }}</td>
+        <td><form method="post" action="{{ url_for('cart.remove', book_id=b.id) }}">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="link" type="submit">Remove</button></form></td></tr>
+  {% endfor %}
+  </tbody>
+  <tfoot><tr><th>Total</th><th>{{ total|money(currency) }}</th><th></th></tr></tfoot>
+</table>
+{% if current_user.is_authenticated %}
+<form method="post" action="{{ url_for('cart.checkout') }}">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <button class="btn" type="submit">Pay securely</button>
+</form>
+{% else %}
+<p><a class="btn" href="{{ url_for('auth.login', next=url_for('cart.view')) }}">Log in to check out</a>
+   <span class="muted">or <a href="{{ url_for('auth.register') }}">create an account</a></span></p>
+{% endif %}
+{% else %}
+<p class="muted">Your cart is empty. <a href="{{ url_for('public.catalog') }}">Browse books</a></p>
+{% endif %}
+{% endblock %}

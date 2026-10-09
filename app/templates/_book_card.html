@@ -1,0 +1,11 @@
+<article class="card">
+  <a href="{{ url_for('public.book_detail', slug=book.slug) }}" class="cover">
+    {% if book.cover_url %}<img src="{{ book.cover_url }}" alt="Cover of {{ book.title }}" loading="lazy">
+    {% else %}<div class="cover-placeholder">{{ book.title }}</div>{% endif %}
+  </a>
+  <div class="card-body">
+    <h3><a href="{{ url_for('public.book_detail', slug=book.slug) }}">{{ book.title }}</a></h3>
+    <p class="muted">{{ book.author.display_name }}</p>
+    <p class="price">{{ book.price_display }}</p>
+  </div>
+</article>

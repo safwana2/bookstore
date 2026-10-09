@@ -1,0 +1,18 @@
+{% extends "admin/admin_base.html" %}
+{% block admin_content %}
+<div class="between"><h1>Books</h1><a class="btn" href="{{ url_for('admin.book_new') }}">+ Add book</a></div>
+<table>
+  <thead><tr><th>Title</th><th>Author</th><th>Price</th><th>Status</th><th>Featured</th><th></th></tr></thead>
+  <tbody>
+  {% for b in books %}
+    <tr><td>{{ b.title }}</td><td>{{ b.author.display_name }}</td><td>{{ b.price_display }}</td>
+        <td><span class="pill pill-{{ b.status }}">{{ b.status }}</span></td><td>{{ '★' if b.is_featured else '' }}</td>
+        <td class="actions"><a href="{{ url_for('admin.book_edit', book_id=b.id) }}">Edit</a>
+          {% if b.status != 'archived' %}
+          <form method="post" action="{{ url_for('admin.book_archive', book_id=b.id) }}" class="inline" onsubmit="return confirm('Archive this book?')">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="link" type="submit">Archive</button></form>
+          {% endif %}</td></tr>
+  {% else %}<tr><td colspan="6" class="muted">No books yet.</td></tr>{% endfor %}
+  </tbody>
+</table>
+{% endblock %}
